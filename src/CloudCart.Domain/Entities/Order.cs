@@ -40,6 +40,12 @@ public class Order : BaseEntity
             OrderItems = orderItems
         };
 
+        // Set OrderId for each item
+        foreach (var item in orderItems)
+        {
+            item.SetOrderId(order.Id);
+        }
+
         order.CalculateTotalAmount();
 
         return order;

@@ -96,13 +96,16 @@ public class CloudCartDbContext : DbContext
 
         modelBuilder.Entity<Product>().HasData(products);
 
-        // Seed Customers
-        var customers = new[]
-        {
+        // Seed Customers with owned Email entity
+        modelBuilder.Entity<Customer>().HasData(
             new { Id = Guid.Parse("c0000001-0000-0000-0000-000000000001"), FirstName = "John", LastName = "Doe", PhoneNumber = "+1234567890", CreatedAt = DateTime.UtcNow, UpdatedAt = (DateTime?)null, IsDeleted = false },
             new { Id = Guid.Parse("c0000002-0000-0000-0000-000000000002"), FirstName = "Jane", LastName = "Smith", PhoneNumber = "+1234567891", CreatedAt = DateTime.UtcNow, UpdatedAt = (DateTime?)null, IsDeleted = false }
-        };
+        );
 
-        modelBuilder.Entity<Customer>().HasData(customers);
+        // Seed Email owned entities for Customers
+        modelBuilder.Entity<Customer>().OwnsOne(c => c.Email).HasData(
+            new { CustomerId = Guid.Parse("c0000001-0000-0000-0000-000000000001"), Value = "john.doe@example.com" },
+            new { CustomerId = Guid.Parse("c0000002-0000-0000-0000-000000000002"), Value = "jane.smith@example.com" }
+        );
     }
 }
